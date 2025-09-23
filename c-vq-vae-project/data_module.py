@@ -35,12 +35,9 @@ class MinecraftDataset(Dataset):
 
 
 def prepare_dataset_loader(ds, batch_size, num_workers=2):
-    device = torch.accelerator.current_accelerator()
-    if device is None:
-        device = torch.device('cpu')
     dataset = MinecraftDataset(ds)
     dataset_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
-    return device, dataset_loader
+    return dataset_loader
 
 
 def download_file(file_path):
