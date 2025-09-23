@@ -11,7 +11,15 @@ export class EmailService {
             subject:"hello its a test",
             text:"this works",
             html: `<p>Hello ${email}</p>`,
-            from: '"Generator Frajdy" <noreply@yourdomain.com>',
+            from: '"Generator Frajdy"',
+        })
+    }
+    async sendVerificationMail(email:string, verifyUrl:string){
+        await this.mailService.sendMail({
+            to: email,
+            subject: 'Verify your email',
+            html: `<p>Click <a href="${verifyUrl}">here</a> to verify your account.</p>`,
+            from: '"Generator Frajdy"',
         })
     }
 }

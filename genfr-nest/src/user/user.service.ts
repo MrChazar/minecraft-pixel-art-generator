@@ -24,6 +24,11 @@ export class UserService {
     user.is_enabled = true;
     await this.mergeUserData(user);
   }
+  async verifyUser(email: string) {
+    const user = await this.findByIdOrFail(email);
+    user.isVerified = true;
+    await this.mergeUserData(user);
+  }
 
   async findOne(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({ where: { email } });

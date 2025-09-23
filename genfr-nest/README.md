@@ -9,6 +9,7 @@
 DATABASE_URL="postgresql://postgres:1234@localhost:5432/postgres"
 EXPIRY_TIME_MS=3600000
 JWTSECRET="C,>#@dHTp)?*lM$zOoj2[Q_f]zLKlr>S_UwbjSDD6+WPDS}?QLBd"
+FRONTEND_URL=http://localhost:3000
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 

@@ -28,6 +28,7 @@ model User {
   name       String?
   createdAt  DateTime @default(now())
   Image      Image[]
+  isVerified Boolean  @default(false)
 }
 
 model Image {

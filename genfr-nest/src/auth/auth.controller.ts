@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Request, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { AuthService } from "./auth.service";
@@ -6,11 +6,15 @@ import { LoginResponseDto } from "./dto/login-response.dto";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from "./dto/register.dto";
 import { AuthGuard } from "./auth.guard";
+import { JwtService } from "@nestjs/jwt";
+import { RegisterResponseDto } from "./dto/register-response.dto";
 
 @Controller("auth")
 @ApiTags("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService,
+    private readonly jwt: JwtService,
+  ) {}
 
   @ApiOperation({
     summary: "Log in with an existing account",
@@ -50,7 +54,7 @@ export class AuthController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post("register")
-  async signUp(@Body() signUpDto: RegisterDto): Promise<LoginResponseDto> {
+  async signUp(@Body() signUpDto: RegisterDto): Promise<RegisterResponseDto> {
     return await this.authService.signUp({
       email: signUpDto.email,
       password: signUpDto.password,
@@ -69,5 +73,24 @@ export class AuthController {
   @ApiBearerAuth("access-token")
   getProfile(@Request() request) {
     return request.user;
+  }
+
+  @ApiOperation({
+    summary: "Verify email",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Verify email with token send to the user email",
+  })
+  @Get('verify-email')
+  async verify(@Query('token') token: string) {
+    try {
+      const payload = this.jwt.verify(token);
+      if (payload.purpose !== 'email-verify') throw new BadRequestException("Invalid token");
+      await this.authService.markVerified(payload.sub);
+      return { message: 'Email verified successfully' };
+    } catch {
+      throw new BadRequestException('Invalid or expired token');
+    }
   }
 }

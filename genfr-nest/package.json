@@ -6,6 +6,7 @@
   "license": "UNLICENSED",
   "author": "",
   "scripts": {
+    "seed": "ts-node prisma/seed.ts",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"ellipsis.yaml\" \"README.md\"",
     "format:check": "prettier --check .",

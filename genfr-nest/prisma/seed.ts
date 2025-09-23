@@ -14,6 +14,7 @@ const main = async () => {
       password: bc,
       is_enabled: true,
       role: "USER",
+      isVerified:true
     },
   });
 
@@ -26,6 +27,7 @@ const main = async () => {
       password: bc, 
       is_enabled: true,
       role: "ADMIN",
+      isVerified:true
     },
   });
 
@@ -38,6 +40,7 @@ const main = async () => {
       password: bc,
       is_enabled: true,
       role: "USER",
+      isVerified:true
     },
   });
 
