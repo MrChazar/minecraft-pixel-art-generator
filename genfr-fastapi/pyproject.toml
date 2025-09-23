@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "genfr-fastapi"
+version = "0.1.0"
+description = "FastAPI app with ML model"
+authors = [
+  { name = "Team Generator Frajdy", email = "patmikdev@gmail.com" }
+]
+dependencies = [
+  "fastapi",
+  "uvicorn[standard]",
+  "torch",
+  "pillow"
+]
+
+[tool.black]
+line-length = 88

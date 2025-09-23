@@ -1,0 +1,12 @@
+Python 3.13.5
+starlette==0.48.0
+torch==2.8.0
+numpy==2.3.3
+pillow==11.3.0
+pydantic==2.11.9
+pydantic_core==2.33.2
+fastapi==0.116.2
+sympy==1.14.0
+uvicorn==0.36.0
+typing-inspection==0.4.1
+typing_extensions==4.15.0
