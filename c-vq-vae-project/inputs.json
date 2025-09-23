@@ -1,12 +1,16 @@
 {
-   "file_path": "../../../../minecraft_dataset_vectors",
+   "file_path": "../../../../../minecraft_dataset_vectors",
    "num_workers": 0,
-   "batch_size": [32],
-   "lr": [0.0001],
-   "code_book_size": [32],
-   "latent_channels": [16],
-   "ch": [64],
-   "commitment_cost": [0.50],
-   "vq_nepoch": [20],
-   "patience": [50]
+   "batch_size": 32,
+   "lr": 0.0001,
+   "code_book_size": 512,
+   "latent_channels": 256,
+   "ch": 128,
+   "commitment_cost": 0.50,
+   "vq_nepoch": 20,
+   "tf_nepoch": 20,
+   "patience": 40,
+   "train": 0,
+   "test_trained_model": 0,
+   "generate": 1
 }
