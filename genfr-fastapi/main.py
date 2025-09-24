@@ -11,7 +11,8 @@ from vq_vae import VQVAE
 import numpy
 
 
-
+type_size = 50
+colors_size = 39
 
 
 from fastapi import FastAPI
@@ -31,14 +32,14 @@ class GenerateResponse(BaseModel):
     metadata: dict = {}
     
 class GenerationParams(BaseModel):
-    is_block: bool
+    is_block: int
     type_idx: List[int]
     color_idx: List[int]
     temperature: float
 
 
-TF_GENERATOR_PATH = os.environ.get("MODEL_PATH", "./models/tf_generator.pth")
-VAE_NET_PATH = os.environ.get("MODEL_PATH", "./models/vae_net.pth")
+TF_GENERATOR_PATH = os.environ.get("MODEL_PATH", "transformer.pth")
+VAE_NET_PATH = os.environ.get("MODEL_PATH", "vae_net.pth")
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load model on startup
@@ -48,20 +49,21 @@ async def load_model():
     try:
         vae_net = VQVAE(channel_in=4, latent_channels=256, ch=128,
                 code_book_size=512, commitment_cost=0.50,
-                cond_type_dim=51, cond_colors_dim=42, cond_hidden=256).to(DEVICE)
+                cond_type_dim=type_size, cond_colors_dim=colors_size, cond_hidden=256).to(DEVICE)
         tf_generator = Transformer(
         num_emb=512 + 1,
         num_layers=6,
         hidden_size=256,
         num_heads=8,
         latent_channels=256,
-        cond_type_dim=51,
-        cond_colors_dim=42).to(DEVICE)
+        cond_type_dim=type_size,
+        cond_colors_dim=colors_size).to(DEVICE)
 
         tf_generator.load_state_dict(torch.load(TF_GENERATOR_PATH, map_location=DEVICE))
         vae_net.load_state_dict(torch.load(VAE_NET_PATH,map_location=DEVICE))
         tf_generator.eval()
         vae_net.eval()
+        return tf_generator, vae_net 
     except Exception as e:
         # crash early if model can't be loaded
         raise RuntimeError(f"Failed to load model: {e}")
@@ -162,19 +164,19 @@ def create_conditions(is_block_val, type_idx, color_idx):
     is_block = torch.tensor([is_block_val], dtype=torch.float32)
 
     # Create one-hot type tensor
-    type_ = torch.zeros(51)
+    type_ = torch.zeros(type_size)
     for i in type_idx:
         type_[i] = 1
 
     # Create one-hot colors tensor
-    colors = torch.zeros(42)
+    colors = torch.zeros(colors_size)
     for i in color_idx:
         colors[i] = 1
 
     return is_block, type_, colors
 
 # Example usage:
-def generate_example_image(is_block,type_idx,color_idx,temperature):
+def generate_example_image(is_block,type_idx,color_idx,temperature,tf_generator,vae_net):
     # Create conditions with proper dimensions
     is_block, type_, colors = create_conditions(
         is_block_val=is_block,      # is_block
@@ -196,3 +198,4 @@ def generate_example_image(is_block,type_idx,color_idx,temperature):
     # Convert to PIL Image and save
     image = tensor_to_image(generated_image)
     return image
+

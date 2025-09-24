@@ -144,6 +144,6 @@ class Transformer(nn.Module):
         encoded_seq = self.encode(input_seq, is_block, type_, colors)
 
         return self.fc_out(encoded_seq)
-    
+
 
 
