@@ -42,8 +42,6 @@ export class AuthService {
      {
       throw new ConflictException("User with this email already exists");
     }
-    
-
 
     const user = await this.userService.createUser(
       {email:userData.email,
@@ -66,6 +64,10 @@ export class AuthService {
 
   async markVerified(userEmail: string){
     await this.userService.verifyUser(userEmail)
+  }
+
+  async changePassword(userEmail: string, newPassword:string){
+    await this.userService.changeUserPassword(userEmail,newPassword)
   }
 
   

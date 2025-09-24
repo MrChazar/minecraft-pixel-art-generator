@@ -5,21 +5,23 @@ import { Injectable } from '@nestjs/common';
 export class EmailService {
     constructor(private readonly mailService: MailerService) {}
 
-    async sendTest(email:string){
-        await this.mailService.sendMail({
-            to:email,
-            subject:"hello its a test",
-            text:"this works",
-            html: `<p>Hello ${email}</p>`,
-            from: '"Generator Frajdy"',
-        })
-    }
+
     async sendVerificationMail(email:string, verifyUrl:string){
         await this.mailService.sendMail({
             to: email,
             subject: 'Verify your email',
-            html: `<p>Click <a href="${verifyUrl}">here</a> to verify your account.</p>`,
-            from: '"Generator Frajdy"',
+            template: './verify-email', // automatically adds .hbs
+            context: { name: 'User', verifyUrl, year: new Date().getFullYear() },
+            from: '"Generator Frajdy" <noreply@yourdomain.com>',
+        })
+    }
+    async sendPasswordResetMail(email:string, resetUrl:string){
+        await this.mailService.sendMail({
+            to: email,
+            subject: 'Reset your password',
+            template: './reset-password',
+            context: { name:  'User', resetUrl, year: new Date().getFullYear() },
+            from: '"Generator Frajdy" <noreply@yourdomain.com>',
         })
     }
 }

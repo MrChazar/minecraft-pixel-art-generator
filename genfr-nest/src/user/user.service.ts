@@ -60,6 +60,16 @@ export class UserService {
       data: { ...user },
     });
   }
+  async changeUserPassword(email:string,newPassword:string) {
+    try {
+    await this.prisma.user.update({
+      where: { email },
+      data: { password:bcrypt.hashSync(newPassword,10)},
+    });}
+    catch (error){
+      throw new Error(error)
+    }
+  }
 
   private async findByIdOrFail(email: string): Promise<User> {
     const user = await this.prisma.user.findUnique({ where: { email } });

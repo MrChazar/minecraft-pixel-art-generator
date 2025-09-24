@@ -5,8 +5,7 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "assets": [
-      "**/*.hbs",
-      "**/*.handlebars"
+      "email/templates/**/*"
     ],
     "watchAssets": true
   }
