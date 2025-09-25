@@ -3,9 +3,11 @@ import { EmailService } from './email.service';
 import { join } from 'node:path'; 
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { PrismaModule } from '../prisma/prisma.module';
+import { EmailCleanupService } from './email-cleanup.service';
 
 @Module({
-  providers: [EmailService],
+  providers: [EmailService, EmailCleanupService],
   exports: [EmailService],
   imports: [MailerModule.forRoot({
       transport: {
@@ -17,7 +19,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
         },
       },
       defaults: {
-        from: '"Generator Frajdy" <noreply@yourdomain.com>',
+        from: '"Generator Frajdy" <${process.env.MAIL_USER}>',
       },
       template: {
         dir: process.env.NODE_ENV === 'production' 
@@ -28,6 +30,8 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
           strict: true,
         },
       },
-    }),]
+    }),
+    PrismaModule
+  ]
 })
 export class EmailModule {}

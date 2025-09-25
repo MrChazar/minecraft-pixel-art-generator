@@ -20,15 +20,16 @@ datasource db {
 }
 
 model User {
-  email      String   @id @unique
-  password   String
-  about_me   String?
-  role       Role     @default(USER)
-  is_enabled Boolean
-  name       String?
-  createdAt  DateTime @default(now())
-  Image      Image[]
-  isVerified Boolean  @default(false)
+  email       String        @id @unique
+  password    String
+  about_me    String?
+  role        Role          @default(USER)
+  is_enabled  Boolean
+  name        String?
+  createdAt   DateTime      @default(now())
+  Image       Image[]
+  isVerified  Boolean       @default(false)
+  EmailAction EmailAction[]
 }
 
 model Image {
@@ -37,4 +38,15 @@ model Image {
   user       User     @relation(fields: [user_email], references: [email])
   user_email String
   createdAt  DateTime @default(now())
+}
+
+model EmailAction {
+  id         Int      @id @default(autoincrement())
+  userEmail  String
+  action     String
+  lastSentAt DateTime @default(now())
+
+  user User @relation(fields: [userEmail], references: [email])
+
+  @@unique([userEmail, action])
 }

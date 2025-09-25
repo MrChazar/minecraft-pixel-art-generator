@@ -7,10 +7,12 @@ import { join } from "node:path";
 import { ImageModule } from './image/image.module';
 import { AuthModule } from "./auth/auth.module";
 import { UserModule } from "./user/user.module";
+import { ScheduleModule } from '@nestjs/schedule';
 
 
 @Module({
   imports: [PrismaModule,
+    ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath:join(__dirname,"../..","media"),
       serveRoot:"/media",
